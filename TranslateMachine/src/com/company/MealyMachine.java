@@ -38,28 +38,20 @@ public class MealyMachine {
         var vertices = verticesStream.toArray(MooreVertex[]::new);
         Arrays.sort(vertices);
 
-        var edges = new MooreEdge[this.edges.length];
-        for (int i = 0; i < this.edges.length; ++i) {
-            var edge = this.edges[i];
-            var startEdge = this.vertices[edge.startStateIndex];
-            var endEdge = this.vertices[edge.endStateIndex];
-            int startEdgeIndex = -1;
-            int endEdgeIndex = -1;
+        var edges = new Vector<MooreEdge>();
+        for (MealyEdge edge : this.edges) {
+            var startVertex = this.vertices[edge.startStateIndex];
+            var endVertex = this.vertices[edge.endStateIndex];
+            int endEdgeIndex = Utils.findIndex(vertices, endVertex, (var v, var name) -> v.name.equals(name));
             for (int j = 0; j < vertices.length; ++j) {
-                if (Objects.equals(vertices[j].name, startEdge))
-                {
-                    startEdgeIndex = j;
-                }
-                if (Objects.equals(vertices[j].name, endEdge))
-                {
-                    endEdgeIndex = j;
+                if (Objects.equals(vertices[j].name, startVertex)) {
+                    edges.add(new MooreEdge(j, endEdgeIndex, edge.argument));
                 }
             }
-            edges[i] = new MooreEdge(startEdgeIndex, endEdgeIndex, edge.argument);
         }
         for (int i = 0; i < vertices.length; ++i) {
-            vertices[i].name = Constants.STATE_LETTER + (i + 1);
+            vertices[i].name = Utils.STATE_LETTER + (i + 1);
         }
-        return new MooreMachine(vertices, edges);
+        return new MooreMachine(vertices, edges.toArray(MooreEdge[]::new));
     }
 }

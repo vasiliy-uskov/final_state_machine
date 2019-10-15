@@ -28,15 +28,15 @@ public class Main {
     private static MealyMachine readMealyMachine(Scanner scanner, int argumentsCount, int verticesCount) {
         var vertices = new String[verticesCount];
         for (var i = 0; i < verticesCount; ++i) {
-            vertices[i] = Constants.STATE_LETTER + i;
+            vertices[i] = Utils.STATE_LETTER + i;
         }
         var edges = new MealyEdge[verticesCount * argumentsCount];
         for (var i = 0; i < edges.length; ++i) {
-            var endStateValue = scanner.next().split(Constants.VALUE_LETTER);
+            var endStateValue = scanner.next().split(Utils.VALUE_LETTER);
             var endState = endStateValue[0];
-            var value = Constants.VALUE_LETTER + endStateValue[1];
-            var endEdgeIndex = findIndex(vertices, endState, String::equals);
-            var argument = Constants.CONSTANT_LETTER + (i / verticesCount);
+            var value = Utils.VALUE_LETTER + endStateValue[1];
+            var endEdgeIndex = Utils.findIndex(vertices, endState, String::equals);
+            var argument = Utils.CONSTANT_LETTER + (i / verticesCount);
             edges[i] = new MealyEdge(i % verticesCount, endEdgeIndex, argument, value);
         }
         return new MealyMachine(vertices, edges);
@@ -45,24 +45,14 @@ public class Main {
     private static MooreMachine readMoorMachine(Scanner scanner, int argumentsCount, int verticesCount) {
         var vertices = new MooreVertex[verticesCount];
         for (var i = 0; i < verticesCount; ++i) {
-            vertices[i] = new MooreVertex(Constants.STATE_LETTER + i, scanner.next());
+            vertices[i] = new MooreVertex(Utils.STATE_LETTER + i, scanner.next());
         }
         var edges = new MooreEdge[verticesCount * argumentsCount];
         for (var i = 0; i < edges.length; ++i) {
-            var endEdgeIndex = findIndex(vertices, scanner.next(), (vertex, endEdge) -> vertex.name.equals(endEdge));
-            var argument = Constants.CONSTANT_LETTER + (i / verticesCount);
+            var endEdgeIndex = Utils.findIndex(vertices, scanner.next(), (vertex, endEdge) -> vertex.name.equals(endEdge));
+            var argument = Utils.CONSTANT_LETTER + (i / verticesCount);
             edges[i] = new MooreEdge(i % verticesCount, endEdgeIndex, argument);
         }
         return new MooreMachine(vertices, edges);
-    }
-
-    private static <T, D> int findIndex(T[] items, D item, BiPredicate<T, D> equal) {
-        for (var i = 0; i < items.length; ++i) {
-            if (equal.test(items[i], item))
-            {
-                return i;
-            }
-        }
-        return -1;
     }
 }

@@ -12,9 +12,6 @@ public class MooreMachine {
     public MooreMachine(MooreVertex[] vertices, MooreEdge[] edges) {
         this.vertices = vertices;
         this.edges = edges;
-        System.out.println(Arrays.stream(this.edges)
-                .map(edge -> this.vertices[edge.endStateIndex].name)
-                .collect(Collectors.joining(" ")));
     }
 
     public void print(PrintWriter output) {
