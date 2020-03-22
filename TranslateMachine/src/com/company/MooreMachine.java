@@ -5,16 +5,16 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.stream.Collectors;
 
-public class MooreMachine {
+class MooreMachine {
     private MooreVertex[] vertices;
     private MooreEdge[] edges;
 
-    public MooreMachine(MooreVertex[] vertices, MooreEdge[] edges) {
+    MooreMachine(MooreVertex[] vertices, MooreEdge[] edges) {
         this.vertices = vertices;
         this.edges = edges;
     }
 
-    public void print(PrintWriter output) {
+    void print(PrintWriter output) {
         output.println(Arrays
                 .stream(this.vertices)
                 .map((var vertex) -> vertex.value)
@@ -35,7 +35,7 @@ public class MooreMachine {
         }
     }
 
-    public MealyMachine toMealyMachine() {
+    MealyMachine toMealyMachine() {
         var edges = Arrays.stream(this.edges).map(edge -> new MealyEdge(
                 edge.startStateIndex,
                 edge.endStateIndex,

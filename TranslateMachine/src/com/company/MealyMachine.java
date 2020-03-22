@@ -4,16 +4,16 @@ import java.io.PrintWriter;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class MealyMachine {
+class MealyMachine {
     private String[] vertices;
     private MealyEdge[] edges;
 
-    public MealyMachine(String[] vertices, MealyEdge[] edges) {
+    MealyMachine(String[] vertices, MealyEdge[] edges) {
         this.vertices = vertices;
         this.edges = edges;
     }
 
-    public void print(PrintWriter output) {
+    void print(PrintWriter output) {
         var arguments = Arrays.stream(this.edges)
                 .map((var edge) -> edge.argument)
                 .distinct()
@@ -27,7 +27,7 @@ public class MealyMachine {
         }
     }
 
-    public MooreMachine toMooreMachine() {
+    MooreMachine toMooreMachine() {
         var verticesStream = Arrays
                 .stream(this.edges)
                 .map((var edge) -> {

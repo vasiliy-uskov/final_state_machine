@@ -1,12 +1,12 @@
 package com.company;
 
-public class MealyEdge {
-    public int startStateIndex;
-    public int endStateIndex;
-    public String argument;
-    public String value;
+class MealyEdge {
+    int startStateIndex;
+    int endStateIndex;
+    String argument;
+    String value;
 
-    public MealyEdge(int startStateIndex, int endStateIndex, String argument, String value) {
+    MealyEdge(int startStateIndex, int endStateIndex, String argument, String value) {
         this.startStateIndex = startStateIndex;
         this.endStateIndex = endStateIndex;
         this.argument = argument;

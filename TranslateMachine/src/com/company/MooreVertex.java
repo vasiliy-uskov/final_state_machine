@@ -1,12 +1,10 @@
 package com.company;
 
-import java.util.Comparator;
-
 public class MooreVertex implements Comparable<MooreVertex> {
-    public String name;
-    public String value;
+    String name;
+    String value;
 
-    public MooreVertex(String name, String value) {
+    MooreVertex(String name, String value) {
         this.name = name;
         this.value = value;
     }
