@@ -1,5 +1,6 @@
 package lexer;
 
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public enum Token {
@@ -15,13 +16,13 @@ public enum Token {
     IntegerNumber("integer number", "\\d+", "[^\\d]"),
 
     Semicolon("semicolon", ";", "."),
-    Comma("comma", "0x[A-Fa-f0-9]+", "."),
+    Comma("comma", ",", "."),
 
-    Comment("Comment", "//", "$"),
+    Comment("Comment", "//.*", "$"),
 
-    Increment("plus", "\\+\\+", "."),
+    Increment("increment", "\\+\\+", "."),
     Plus("plus", "\\+", "."),
-    Decrement("minus", "\\-\\-", "."),
+    Decrement("decrement", "\\-\\-", "."),
     Minus("minus", "\\-", "."),
     Multiplying("multiplying", "\\*", "."),
     Dividing("Dividing", "/", "."),
@@ -29,20 +30,30 @@ public enum Token {
     And("and", "&&", "."),
     Assignment("assignment", "=", "."),
 
-    OpenCurlyBracket("open curly bracket", "{", "."),
-    CloseCurlyBracket("close curly bracket", "}", "."),
-    OpenSquareBracket("open square bracket", "[", "."),
-    CloseSquareBracket("close square bracket", "]", "."),
+    OpenCurlyBracket("open curly bracket", "\\{", "."),
+    CloseCurlyBracket("close curly bracket", "\\}", "."),
+    OpenSquareBracket("open square bracket", "\\[", "."),
+    CloseSquareBracket("close square bracket", "\\]", "."),
     OpenParenthesis("open parenthesis", "\\(", "."),
     CloseParenthesis("close parenthesis", "\\)", "."),
 
-    Identifier("identifier", "\\w[\\w\\d]+", "[^\\d\\w]");
+    Identifier("identifier", "\\w[\\w\\d]*", "[^\\d\\w]");
 
     public final String name;
-    final Pattern pattern;
+    private final Pattern pattern;
 
     Token(String name, String regexp, String stopSymbol) {
         this.name = name;
         this.pattern = Pattern.compile("^(" + regexp + ")" + stopSymbol);
+    }
+
+    String getValue(String string) {
+        string = string + " ";
+        Matcher matcher = pattern.matcher(string);
+        if (matcher.find()) {
+            String val = matcher.group(0);
+            return val.substring(0, val.length() - 1);
+        }
+        return null;
     }
 }
