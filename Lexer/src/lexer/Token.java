@@ -37,7 +37,9 @@ public enum Token {
     OpenParenthesis("open parenthesis", "\\(", "."),
     CloseParenthesis("close parenthesis", "\\)", "."),
 
-    Identifier("identifier", "\\w[\\w\\d]*", "[^\\d\\w]");
+    Identifier("identifier", "\\w[\\w\\d]*", "[^\\d\\w]"),
+
+    Error("error", "", "");
 
     public final String name;
     private final Pattern pattern;

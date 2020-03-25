@@ -58,6 +58,9 @@ public class Lexer {
                     return new Lexeme(token, value);
                 }
             }
+            String errorLexeme = currentLine.substring(0, 1);
+            currentLine = currentLine.substring(1);
+            return new Lexeme(Token.Error, errorLexeme);
         }
         return null;
     }
