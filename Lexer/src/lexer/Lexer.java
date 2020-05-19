@@ -26,7 +26,7 @@ public class Lexer {
         tokens.add(Token.Semicolon);
         tokens.add(Token.Comma);
 
-        tokens.add(Token.Comment);
+        tokens.add(Token.SingleLineComment);
 
         tokens.add(Token.Increment);
         tokens.add(Token.Plus);
@@ -50,7 +50,7 @@ public class Lexer {
 
     public Lexeme getLexeme() {
         invalidateCurrentString();
-        if (currentLine != null) {
+        if (currentLine != null && currentLine.length() != 0) {
             for (var token : tokens) {
                 String value = token.getValue(currentLine);
                 if (value != null) {
@@ -62,7 +62,7 @@ public class Lexer {
             currentLine = currentLine.substring(1);
             return new Lexeme(Token.Error, errorLexeme);
         }
-        return null;
+        return new Lexeme(Token.EndFile, "");
     }
 
     private void invalidateCurrentString() {

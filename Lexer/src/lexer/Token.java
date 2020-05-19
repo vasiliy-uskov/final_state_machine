@@ -18,7 +18,7 @@ public enum Token {
     Semicolon("semicolon", ";", "."),
     Comma("comma", ",", "."),
 
-    Comment("Comment", "//.*", "$"),
+    SingleLineComment("single line comment", "//.*", "$"),
 
     Increment("increment", "\\+\\+", "."),
     Plus("plus", "\\+", "."),
@@ -39,6 +39,7 @@ public enum Token {
 
     Identifier("identifier", "\\w[\\w\\d]*", "[^\\d\\w]"),
 
+    EndFile("end file", ".", ""),
     Error("error", "", "");
 
     public final String name;
