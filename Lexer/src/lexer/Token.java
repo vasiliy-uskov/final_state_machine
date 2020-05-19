@@ -4,59 +4,51 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public enum Token {
-    Condition("condition definition", "if", "[^\\d\\w]"),
-    While("while definition", "while", "[^\\d\\w]"),
-    PrimitiveTypes("primitive type", "(int|float|boolean)", "[^\\d\\w]"),
+    Condition("condition definition", new PatternLexemeParser("if", "[^\\d\\w]")),
+    While("while definition", new PatternLexemeParser("while", "[^\\d\\w]")),
+    PrimitiveTypes("primitive type", new PatternLexemeParser("(int|float|boolean)", "[^\\d\\w]")),
 
-    Null("null", "null", "[^\\d\\w]"),
-    Boolean("boolean literal", "(true|false)", "[^\\d\\w]"),
-    HexNumber("hex number", "0x[A-Fa-f0-9]+", "[^A-Fa-f0-9]"),
-    BinaryNumber("binary number", "0b[01]+", "[^01]"),
-    FloatNumber("float number", "\\d+\\.\\d+", "[^\\d]"),
-    IntegerNumber("integer number", "\\d+", "[^\\d]"),
+    Null("null", new PatternLexemeParser("null", "[^\\d\\w]")),
+    Boolean("boolean literal", new PatternLexemeParser("(true|false)", "[^\\d\\w]")),
+    HexNumber("hex number", new PatternLexemeParser("0x[A-Fa-f0-9]+", "[^A-Fa-f0-9]")),
+    BinaryNumber("binary number", new PatternLexemeParser("0b[01]+", "[^01]")),
+    FloatNumber("float number", new PatternLexemeParser("\\d+\\.\\d+", "[^\\d]")),
+    IntegerNumber("integer number", new PatternLexemeParser("\\d+", "[^\\d]")),
 
-    Semicolon("semicolon", ";", "."),
-    Comma("comma", ",", "."),
+    Semicolon("semicolon", new PatternLexemeParser(";", ".")),
+    Comma("comma", new PatternLexemeParser(",", ".")),
 
-    SingleLineComment("single line comment", "//.*", "$"),
+    SingleLineComment("single line comment", new PatternLexemeParser("//.*", "$")),
 
-    Increment("increment", "\\+\\+", "."),
-    Plus("plus", "\\+", "."),
-    Decrement("decrement", "\\-\\-", "."),
-    Minus("minus", "\\-", "."),
-    Multiplying("multiplying", "\\*", "."),
-    Dividing("Dividing", "/", "."),
-    Or("or", "\\|\\|", "."),
-    And("and", "&&", "."),
-    Assignment("assignment", "=", "."),
+    Increment("increment", new PatternLexemeParser("\\+\\+", ".")),
+    Plus("plus", new PatternLexemeParser("\\+", ".")),
+    Decrement("decrement", new PatternLexemeParser("\\-\\-", ".")),
+    Minus("minus", new PatternLexemeParser("\\-", ".")),
+    Multiplying("multiplying", new PatternLexemeParser("\\*", ".")),
+    Dividing("Dividing", new PatternLexemeParser("/", ".")),
+    Or("or", new PatternLexemeParser("\\|\\|", ".")),
+    And("and", new PatternLexemeParser("&&", ".")),
+    Assignment("assignment", new PatternLexemeParser("=", ".")),
 
-    OpenCurlyBracket("open curly bracket", "\\{", "."),
-    CloseCurlyBracket("close curly bracket", "\\}", "."),
-    OpenSquareBracket("open square bracket", "\\[", "."),
-    CloseSquareBracket("close square bracket", "\\]", "."),
-    OpenParenthesis("open parenthesis", "\\(", "."),
-    CloseParenthesis("close parenthesis", "\\)", "."),
+    OpenCurlyBracket("open curly bracket", new PatternLexemeParser("\\{", ".")),
+    CloseCurlyBracket("close curly bracket", new PatternLexemeParser("\\}", ".")),
+    OpenSquareBracket("open square bracket", new PatternLexemeParser("\\[", ".")),
+    CloseSquareBracket("close square bracket", new PatternLexemeParser("\\]", ".")),
+    OpenParenthesis("open parenthesis", new PatternLexemeParser("\\(", ".")),
+    CloseParenthesis("close parenthesis", new PatternLexemeParser("\\)", ".")),
 
-    Identifier("identifier", "\\w[\\w\\d]*", "[^\\d\\w]"),
+    Identifier("identifier", new PatternLexemeParser("\\w[\\w\\d]*", "[^\\d\\w]")),
+    Spaces("spaces", new PatternLexemeParser("\\s+", "([^\\s]|$)")),
 
-    EndFile("end file", ".", ""),
-    Error("error", "", "");
+    Error("error", new PatternLexemeParser(".", ".")),
+
+    EndFile("end file", new VoidParser());
 
     public final String name;
-    private final Pattern pattern;
+    final ILexemeParser parser;
 
-    Token(String name, String regexp, String stopSymbol) {
+    Token(String name, ILexemeParser parser) {
         this.name = name;
-        this.pattern = Pattern.compile("^(" + regexp + ")" + stopSymbol);
-    }
-
-    String getValue(String string) {
-        string = string + " ";
-        Matcher matcher = pattern.matcher(string);
-        if (matcher.find()) {
-            String val = matcher.group(0);
-            return val.substring(0, val.length() - 1);
-        }
-        return null;
+        this.parser = parser;
     }
 }

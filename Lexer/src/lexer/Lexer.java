@@ -6,12 +6,13 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Lexer {
-    private Scanner input;
-    private String currentLine;
+    private SafeStringProvider input;
     private final List<Token> tokens = new ArrayList<>();
 
     public Lexer(InputStream input) {
-        this.input = new Scanner(input);
+        this.input = new SafeStringProvider(input);
+
+        // definition order important!
         tokens.add(Token.Condition);
         tokens.add(Token.While);
         tokens.add(Token.PrimitiveTypes);
@@ -46,31 +47,25 @@ public class Lexer {
         tokens.add(Token.CloseParenthesis);
 
         tokens.add(Token.Identifier);
+
+        tokens.add(Token.Spaces);
+        tokens.add(Token.Error);
     }
 
     public Lexeme getLexeme() {
-        invalidateCurrentString();
-        if (currentLine != null && currentLine.length() != 0) {
+        if (!input.isEmpty()) {
             for (var token : tokens) {
-                String value = token.getValue(currentLine);
+                input.restore();
+                String value = token.parser.apply(input);
                 if (value != null) {
-                    currentLine = currentLine.substring(value.length());
+                    input.forgot(value.length());
+                    if (token == Token.Spaces) {
+                        return getLexeme();
+                    }
                     return new Lexeme(token, value);
                 }
             }
-            String errorLexeme = currentLine.substring(0, 1);
-            currentLine = currentLine.substring(1);
-            return new Lexeme(Token.Error, errorLexeme);
         }
         return new Lexeme(Token.EndFile, "");
-    }
-
-    private void invalidateCurrentString() {
-        if (input.hasNextLine() && (currentLine == null || currentLine.isEmpty())) {
-            currentLine = input.nextLine();
-        }
-        if (currentLine != null) {
-            currentLine = currentLine.trim();
-        }
     }
 }
