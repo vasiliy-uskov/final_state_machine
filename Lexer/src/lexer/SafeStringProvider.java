@@ -36,7 +36,7 @@ class SafeStringProvider implements IStringProvider {
         while (charsCount != 0 && iterator.hasNext()) {
             String currentLine = iterator.next();
             if (charsCount >= currentLine.length()) {
-                charsCount = charsCount - currentLine.length();
+                charsCount = charsCount - currentLine.length() - "\n".length();
                 iterator.remove();
             }
             else {

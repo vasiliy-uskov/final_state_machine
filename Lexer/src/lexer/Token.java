@@ -17,6 +17,7 @@ public enum Token {
     Comma("comma", new PatternLexemeParser(",", ".")),
 
     SingleLineComment("single line comment", new PatternLexemeParser("//.*", "$")),
+    MultilineComment("multiline comment", new MultilineCommentParser()),
 
     Increment("increment", new PatternLexemeParser("\\+\\+", ".")),
     Plus("plus", new PatternLexemeParser("\\+", ".")),

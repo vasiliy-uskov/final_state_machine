@@ -29,6 +29,7 @@ public class Lexer {
         tokens.add(Token.Comma);
 
         tokens.add(Token.SingleLineComment);
+        tokens.add(Token.MultilineComment);
 
         tokens.add(Token.Increment);
         tokens.add(Token.Plus);
