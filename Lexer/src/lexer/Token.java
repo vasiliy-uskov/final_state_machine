@@ -1,8 +1,5 @@
 package lexer;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 public enum Token {
     Condition("condition definition", new PatternLexemeParser("if", "[^\\d\\w]")),
     While("while definition", new PatternLexemeParser("while", "[^\\d\\w]")),
@@ -42,7 +39,7 @@ public enum Token {
 
     Error("error", new PatternLexemeParser(".", ".")),
 
-    EndFile("end file", new VoidParser());
+    EndFile("end file", new EndFileParser());
 
     public final String name;
     final ILexemeParser parser;

@@ -50,22 +50,22 @@ public class Lexer {
 
         tokens.add(Token.Spaces);
         tokens.add(Token.Error);
+        tokens.add(Token.EndFile);
     }
 
     public Lexeme getLexeme() {
-        if (!input.isEmpty()) {
-            for (var token : tokens) {
-                input.restore();
-                String value = token.parser.apply(input);
-                if (value != null) {
-                    input.forgot(value.length());
-                    if (token == Token.Spaces) {
-                        return getLexeme();
-                    }
-                    return new Lexeme(token, value);
-                }
+        for (var token : tokens) {
+            input.restore();
+            String value = token.parser.apply(input);
+            if (value == null) {
+                continue;
             }
+            input.forgot(value.length());
+            if (token == Token.Spaces) {
+                return getLexeme();
+            }
+            return new Lexeme(token, value);
         }
-        return new Lexeme(Token.EndFile, "");
+        throw new Error("Impossible");
     }
 }
