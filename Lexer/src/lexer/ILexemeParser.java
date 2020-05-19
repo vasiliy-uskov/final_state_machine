@@ -1,5 +1,5 @@
 package lexer;
 
-import java.util.function.Function;
-
-interface ILexemeParser extends Function<IStringProvider, String> { }
+interface ILexemeParser {
+    String apply(IStringProvider iStringProvider) throws LexemeParseError;
+}

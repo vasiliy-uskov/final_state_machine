@@ -23,6 +23,7 @@ public class Lexer {
         tokens.add(Token.BinaryNumber);
         tokens.add(Token.FloatNumber);
         tokens.add(Token.IntegerNumber);
+        tokens.add(Token.StringLiteral);
 
         tokens.add(Token.Semicolon);
         tokens.add(Token.Comma);
@@ -56,16 +57,66 @@ public class Lexer {
     public Lexeme getLexeme() {
         for (var token : tokens) {
             input.restore();
-            String value = token.parser.apply(input);
-            if (value == null) {
-                continue;
+            try {
+                String value = token.parser.apply(input);
+                if (value == null) {
+                    continue;
+                }
+                input.forgot(value.length());
+
+                //Workarounds for simpler code
+                if (token == Token.Spaces) {
+                    return getLexeme();
+                }
+                if (token == Token.StringLiteral) {
+                    value = expandEscapedSymbolsInLiteral(value);
+                }
+
+                return new Lexeme(token, value);
             }
-            input.forgot(value.length());
-            if (token == Token.Spaces) {
-                return getLexeme();
+            catch (LexemeParseError parseError) {
+                input.forgot(parseError.getLexeme().length());
+                return new Lexeme(Token.Error, parseError.getMessage());
             }
-            return new Lexeme(token, value);
         }
         throw new Error("Impossible");
+    }
+
+    private String expandEscapedSymbolsInLiteral(String literal) {
+        boolean isEscaping = false;
+        StringBuilder expandedLiteral = new StringBuilder();
+        for (int i = 1; i < literal.length() - 1; ++i) {
+            char symbol = literal.charAt(i);
+            if (isEscaping) {
+                isEscaping = false;
+                expandedLiteral.append(expandEscapingSymbol(symbol));
+            }
+            else {
+                isEscaping = symbol == '\\';
+                if (!isEscaping) {
+                    expandedLiteral.append(symbol);
+                }
+            }
+        }
+        return expandedLiteral.toString();
+    }
+
+    private String expandEscapingSymbol(char symbol) {
+        switch (symbol) {
+            case 'r':
+                return "\r";
+            case 'n':
+                return "\n";
+            case 't':
+                return "\t";
+            case 'f':
+                return "\f";
+            case 'b':
+                return "\b";
+            case '"':
+                return "\"";
+            default:
+                return "\\" + symbol;
+        }
     }
 }

@@ -11,6 +11,7 @@ public enum Token {
     BinaryNumber("binary number", new PatternLexemeParser("0b[01]+", "[^01]")),
     FloatNumber("float number", new PatternLexemeParser("\\d+\\.\\d+", "[^\\d]")),
     IntegerNumber("integer number", new PatternLexemeParser("\\d+", "[^\\d]")),
+    StringLiteral("string literal", new StringLiteralParser()),
 
     Semicolon("semicolon", new PatternLexemeParser(";", ".")),
     Comma("comma", new PatternLexemeParser(",", ".")),
