@@ -1,5 +1,7 @@
 package lexer;
 
+import lexer.parser.IStringProvider;
+
 import java.io.InputStream;
 import java.util.*;
 
@@ -11,13 +13,6 @@ class SafeStringProvider implements IStringProvider {
     SafeStringProvider(InputStream input) {
         this.input = new Scanner(input);
     }
-
-    boolean isEmpty() {
-        boolean isEmpty = readLine() == null;
-        restore();
-        return isEmpty;
-    }
-
     public String readLine() {
         if (!cacheIterator.hasNext())
         {
@@ -31,7 +26,7 @@ class SafeStringProvider implements IStringProvider {
         return cacheIterator.next();
     }
 
-    void forgot(int charsCount) {
+    void forget(int charsCount) {
         ListIterator<String> iterator = cachedLines.listIterator();
         while (charsCount != 0 && iterator.hasNext()) {
             String currentLine = iterator.next();

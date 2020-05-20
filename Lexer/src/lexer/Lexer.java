@@ -1,9 +1,10 @@
 package lexer;
 
+import lexer.parser.LexemeParseError;
+
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 public class Lexer {
     private SafeStringProvider input;
@@ -63,7 +64,7 @@ public class Lexer {
                 if (value == null) {
                     continue;
                 }
-                input.forgot(value.length());
+                input.forget(value.length());
 
                 //Workarounds for simpler code
                 if (token == Token.Spaces) {
@@ -76,7 +77,7 @@ public class Lexer {
                 return new Lexeme(token, value);
             }
             catch (LexemeParseError parseError) {
-                input.forgot(parseError.getLexeme().length());
+                input.forget(parseError.getLexeme().length());
                 return new Lexeme(Token.Error, parseError.getMessage());
             }
         }

@@ -1,6 +1,8 @@
-package lexer;
+package lexer.parser;
 
-public class MultilineCommentParser implements ILexemeParser{
+import lexer.ILexemeParser;
+
+public class MultilineCommentParser implements ILexemeParser {
     public String apply(IStringProvider input) throws LexemeParseError {
         String currentLine = input.readLine();
         if (currentLine == null || currentLine.length() == 0 || currentLine.indexOf("/*") != 0) {

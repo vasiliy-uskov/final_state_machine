@@ -1,4 +1,4 @@
-package lexer;
+package lexer.parser;
 
 public class LexemeParseError extends Exception {
     String lexeme;
@@ -8,7 +8,7 @@ public class LexemeParseError extends Exception {
         this.lexeme = lexeme;
     }
 
-    String getLexeme() {
+    public String getLexeme() {
         return lexeme;
     }
 }

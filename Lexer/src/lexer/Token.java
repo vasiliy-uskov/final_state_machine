@@ -1,5 +1,7 @@
 package lexer;
 
+import lexer.parser.*;
+
 public enum Token {
     Condition("condition definition", new PatternLexemeParser("if", "[^\\d\\w]")),
     While("while definition", new PatternLexemeParser("while", "[^\\d\\w]")),
@@ -7,10 +9,10 @@ public enum Token {
 
     Null("null", new PatternLexemeParser("null", "[^\\d\\w]")),
     Boolean("boolean literal", new PatternLexemeParser("(true|false)", "[^\\d\\w]")),
-    HexNumber("hex number", new PatternLexemeParser("0x[A-Fa-f0-9]+", "[^A-Fa-f0-9]")),
-    BinaryNumber("binary number", new PatternLexemeParser("0b[01]+", "[^01]")),
-    FloatNumber("float number", new PatternLexemeParser("\\d+\\.\\d+", "[^\\d]")),
-    IntegerNumber("integer number", new PatternLexemeParser("\\d+", "[^\\d]")),
+    HexNumber("hex number", new HexNumberParser()),
+    BinaryNumber("binary number", new BinaryNumberParser()),
+    FloatNumber("float number", new FloatNumberParser()),
+    IntegerNumber("integer number", new IntegerNumberParser()),
     StringLiteral("string literal", new StringLiteralParser()),
 
     Semicolon("semicolon", new PatternLexemeParser(";", ".")),
@@ -36,7 +38,7 @@ public enum Token {
     OpenParenthesis("open parenthesis", new PatternLexemeParser("\\(", ".")),
     CloseParenthesis("close parenthesis", new PatternLexemeParser("\\)", ".")),
 
-    Identifier("identifier", new PatternLexemeParser("\\w[\\w\\d]*", "[^\\d\\w]")),
+    Identifier("identifier", new IdentifierParser()),
     Spaces("spaces", new PatternLexemeParser("\\s+", "([^\\s]|$)")),
 
     Error("error", new PatternLexemeParser(".", ".")),

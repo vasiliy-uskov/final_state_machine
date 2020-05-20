@@ -1,4 +1,6 @@
-package lexer;
+package lexer.parser;
+
+import lexer.ILexemeParser;
 
 public class StringLiteralParser implements ILexemeParser {
     public String apply(IStringProvider input) throws LexemeParseError {

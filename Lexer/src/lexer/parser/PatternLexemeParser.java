@@ -1,16 +1,18 @@
-package lexer;
+package lexer.parser;
+
+import lexer.ILexemeParser;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-class PatternLexemeParser implements ILexemeParser {
+public class PatternLexemeParser implements ILexemeParser {
     private final Pattern pattern;
 
-    PatternLexemeParser(String regexp, String stopSymbol) {
+    public PatternLexemeParser(String regexp, String stopSymbol) {
         this.pattern = Pattern.compile("^(" + regexp + ")" + stopSymbol);
     }
 
-    public String apply(IStringProvider provider) {
+    public String apply(IStringProvider provider) throws LexemeParseError {
         String str = provider.readLine();
         if (str == null || str.length() == 0) {
             return null;
