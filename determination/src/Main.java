@@ -30,7 +30,7 @@ public class Main {
                 }
                 else {
                     var val = machine.get(startVertex - 1)[inputSignal - 1];
-                    table[inputSignal][startVertex] = val < 0 ? "-" : "v" + val;
+                    table[inputSignal][startVertex] = val < 0 ? "-" : "v" + (val + 1);
                 }
             }
         }
