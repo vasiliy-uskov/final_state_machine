@@ -77,6 +77,9 @@ public class Lexer {
                 if (token == Token.StringLiteral) {
                     value = expandEscapedSymbolsInLiteral(value);
                 }
+                if (token == Token.IntegerNumber || token == Token.FloatNumber) {
+                    value = collapseExtraZeros(value);
+                }
 
                 return new Lexeme(token, value, line, position);
             }
@@ -86,6 +89,20 @@ public class Lexer {
             }
         }
         throw new Error("Impossible");
+    }
+
+    private String collapseExtraZeros(String number) {
+        int firstValuableDigitIndex = 0;
+        while (firstValuableDigitIndex < number.length() && number.charAt(firstValuableDigitIndex) == '0') {
+            firstValuableDigitIndex++;
+        }
+        if (firstValuableDigitIndex == number.length()) {
+            return "0";
+        }
+        if (number.charAt(firstValuableDigitIndex) == '.') {
+            firstValuableDigitIndex--;
+        }
+        return number.substring(firstValuableDigitIndex);
     }
 
     private String expandEscapedSymbolsInLiteral(String literal) {
