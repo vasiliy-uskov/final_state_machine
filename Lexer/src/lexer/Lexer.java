@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Lexer {
-    private SafeStringProvider input;
+    private final SafeStringProvider input;
     private final List<Token> tokens = new ArrayList<>();
 
     public Lexer(InputStream input) {
@@ -59,11 +59,14 @@ public class Lexer {
     public Lexeme getLexeme() {
         for (var token : tokens) {
             input.restore();
+            int line = input.lineIndex();
+            int position = input.position();
             try {
                 String value = token.parser.apply(input);
                 if (value == null) {
                     continue;
                 }
+
                 input.forget(value.length());
 
                 //Workarounds for simpler code
@@ -74,11 +77,11 @@ public class Lexer {
                     value = expandEscapedSymbolsInLiteral(value);
                 }
 
-                return new Lexeme(token, value);
+                return new Lexeme(token, value, line, position);
             }
             catch (LexemeParseError parseError) {
                 input.forget(parseError.getLexeme().length());
-                return new Lexeme(Token.Error, parseError.getMessage());
+                return new Lexeme(Token.Error, parseError.getMessage(), line, position);
             }
         }
         throw new Error("Impossible");
@@ -104,21 +107,14 @@ public class Lexer {
     }
 
     private String expandEscapingSymbol(char symbol) {
-        switch (symbol) {
-            case 'r':
-                return "\r";
-            case 'n':
-                return "\n";
-            case 't':
-                return "\t";
-            case 'f':
-                return "\f";
-            case 'b':
-                return "\b";
-            case '"':
-                return "\"";
-            default:
-                return "\\" + symbol;
-        }
+        return switch (symbol) {
+            case 'r' -> "\r";
+            case 'n' -> "\n";
+            case 't' -> "\t";
+            case 'f' -> "\f";
+            case 'b' -> "\b";
+            case '"' -> "\"";
+            default -> "\\" + symbol;
+        };
     }
 }

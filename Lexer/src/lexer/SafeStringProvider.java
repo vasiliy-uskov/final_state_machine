@@ -8,11 +8,22 @@ import java.util.*;
 class SafeStringProvider implements IStringProvider {
     private Scanner input;
     private List<String> cachedLines = new LinkedList<>();
+    private int lineIndex = 0;
+    private int position = 0;
     private ListIterator<String> cacheIterator = cachedLines.listIterator();
 
     SafeStringProvider(InputStream input) {
         this.input = new Scanner(input);
     }
+
+    int lineIndex() {
+        return lineIndex;
+    }
+
+    int position() {
+        return position;
+    }
+
     public String readLine() {
         if (!cacheIterator.hasNext())
         {
@@ -32,9 +43,12 @@ class SafeStringProvider implements IStringProvider {
             String currentLine = iterator.next();
             if (charsCount >= currentLine.length()) {
                 charsCount = charsCount - currentLine.length() - "\n".length();
+                lineIndex++;
+                position = 0;
                 iterator.remove();
             }
             else {
+                position += charsCount;
                 iterator.set(currentLine.substring(charsCount));
                 charsCount = 0;
             }
