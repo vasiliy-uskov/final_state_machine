@@ -14,6 +14,7 @@ public enum Token {
     FloatNumber("float number", new FloatNumberParser()),
     IntegerNumber("integer number", new IntegerNumberParser()),
     StringLiteral("string literal", new StringLiteralParser()),
+    MultilineStringLiteral("multiline string literal", new MultilineStringLiteralParser()),
 
     Semicolon("semicolon", new PatternLexemeParser(";", ".")),
     Comma("comma", new PatternLexemeParser(",", ".")),

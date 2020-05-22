@@ -25,6 +25,7 @@ public class Lexer {
         tokens.add(Token.FloatNumber);
         tokens.add(Token.IntegerNumber);
         tokens.add(Token.StringLiteral);
+        tokens.add(Token.MultilineStringLiteral);
 
         tokens.add(Token.Semicolon);
         tokens.add(Token.Comma);
