@@ -1,5 +1,8 @@
 package minimization;
 
+import printers.TablePrinter;
+
+import java.util.Formatter;
 import java.util.function.IntBinaryOperator;
 
 public class MachineMinimizer {
@@ -11,8 +14,26 @@ public class MachineMinimizer {
             prevMarkedVertices = markedVertices;
             int[][] markupTransitions = getMarkedVerticesTransitions(markedVertices, getEndVertex, inputSignalsCount);
             markedVertices = splitMarkup(markedVertices, markupTransitions);
+            printStep(inputSignalsCount, verticesCount, prevMarkedVertices, markupTransitions, markedVertices);
         } while (!compare(prevMarkedVertices, markedVertices));
         return markedVertices;
+    }
+
+    private static void printStep(int inputSignalsCount, int verticesCount, int[] prevMarkedVertices, int[][] markupTransitions, int[] markedVertices) {
+        String[][] table = new String[inputSignalsCount + 5][verticesCount];
+        for (int i = 0; i < verticesCount; ++i) {
+            table[0][i] =  "a" + (prevMarkedVertices[i] + 1);
+            table[1][i] = "v" + (i + 1);
+            table[table.length - 2][i] = table[2][i] = "=";
+            table[table.length - 1][i] = "b" + (markedVertices[i] + 1);
+        }
+        for (int start = 0; start < verticesCount; start += 1) {
+            for (int input = 0; input < inputSignalsCount; input += 1) {
+                table[input + 3][start] = "a" + (markupTransitions[start][input] + 1);
+            }
+        }
+        TablePrinter.print(new Formatter(System.out), table);
+        System.out.println();
     }
 
     private static int[][] getMarkedVerticesTransitions(int[] markedVertices, IntBinaryOperator getEndVertex, int inputSignalsCount) {
