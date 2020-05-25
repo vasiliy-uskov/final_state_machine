@@ -33,6 +33,7 @@ public class Lexer {
         tokens.add(Token.SingleLineComment);
         tokens.add(Token.MultilineComment);
 
+        tokens.add(Token.Dot);
         tokens.add(Token.Increment);
         tokens.add(Token.Plus);
         tokens.add(Token.Decrement);
@@ -53,6 +54,7 @@ public class Lexer {
         tokens.add(Token.Identifier);
 
         tokens.add(Token.Spaces);
+        tokens.add(Token.EmptyLine);
         tokens.add(Token.Error);
         tokens.add(Token.EndFile);
     }
@@ -71,7 +73,7 @@ public class Lexer {
                 input.forget(value.length());
 
                 //Workarounds for simpler code
-                if (token == Token.Spaces) {
+                if (token == Token.Spaces || token == Token.EmptyLine) {
                     return getLexeme();
                 }
                 if (token == Token.StringLiteral) {

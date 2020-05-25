@@ -39,6 +39,14 @@ class SafeStringProvider implements IStringProvider {
 
     void forget(int charsCount) {
         ListIterator<String> iterator = cachedLines.listIterator();
+        if (charsCount == 0 && iterator.hasNext() && iterator.next().length() == 0)
+        {
+            lineIndex++;
+            position = 0;
+            iterator.remove();
+            return;
+        }
+        iterator = cachedLines.listIterator();
         while (charsCount != 0 && iterator.hasNext()) {
             String currentLine = iterator.next();
             if (charsCount >= currentLine.length()) {

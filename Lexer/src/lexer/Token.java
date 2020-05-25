@@ -22,6 +22,7 @@ public enum Token {
     SingleLineComment("single line comment", new PatternLexemeParser("//.*", "$")),
     MultilineComment("multiline comment", new MultilineCommentParser()),
 
+    Dot("dot", new PatternLexemeParser("\\.", ".")),
     Increment("increment", new PatternLexemeParser("\\+\\+", ".")),
     Plus("plus", new PatternLexemeParser("\\+", ".")),
     Decrement("decrement", new PatternLexemeParser("\\-\\-", ".")),
@@ -41,6 +42,7 @@ public enum Token {
 
     Identifier("identifier", new IdentifierParser()),
     Spaces("spaces", new PatternLexemeParser("\\s+", "([^\\s]|$)")),
+    EmptyLine("empty line", new EmptyLineParser()),
 
     Error("error", new PatternLexemeParser(".", ".")),
 
