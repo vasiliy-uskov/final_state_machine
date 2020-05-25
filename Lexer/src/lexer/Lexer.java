@@ -9,6 +9,7 @@ import java.util.List;
 public class Lexer {
     private final SafeStringProvider input;
     private final List<Token> tokens = new ArrayList<>();
+    private final LexemeBuilder lexemeBuilder = new LexemeBuilder();
 
     public Lexer(InputStream input) {
         this.input = new SafeStringProvider(input);
@@ -71,19 +72,8 @@ public class Lexer {
                 }
 
                 input.forget(value.length());
-
-                //Workarounds for simpler code
-                if (token == Token.Spaces || token == Token.EmptyLine) {
-                    return getLexeme();
-                }
-                if (token == Token.StringLiteral) {
-                    value = expandEscapedSymbolsInLiteral(value);
-                }
-                if (token == Token.IntegerNumber || token == Token.FloatNumber) {
-                    value = collapseExtraZeros(value);
-                }
-
-                return new Lexeme(token, value, line, position);
+                var lexeme = lexemeBuilder.build(token, value, line, position);
+                return lexeme == null ? getLexeme() : lexeme;
             }
             catch (LexemeParseError parseError) {
                 input.forget(parseError.getLexeme().length());
@@ -91,50 +81,5 @@ public class Lexer {
             }
         }
         throw new Error("Impossible");
-    }
-
-    private String collapseExtraZeros(String number) {
-        int firstValuableDigitIndex = 0;
-        while (firstValuableDigitIndex < number.length() && number.charAt(firstValuableDigitIndex) == '0') {
-            firstValuableDigitIndex++;
-        }
-        if (firstValuableDigitIndex == number.length()) {
-            return "0";
-        }
-        if (number.charAt(firstValuableDigitIndex) == '.') {
-            firstValuableDigitIndex--;
-        }
-        return number.substring(firstValuableDigitIndex);
-    }
-
-    private String expandEscapedSymbolsInLiteral(String literal) {
-        boolean isEscaping = false;
-        StringBuilder expandedLiteral = new StringBuilder();
-        for (int i = 1; i < literal.length() - 1; ++i) {
-            char symbol = literal.charAt(i);
-            if (isEscaping) {
-                isEscaping = false;
-                expandedLiteral.append(expandEscapingSymbol(symbol));
-            }
-            else {
-                isEscaping = symbol == '\\';
-                if (!isEscaping) {
-                    expandedLiteral.append(symbol);
-                }
-            }
-        }
-        return expandedLiteral.toString();
-    }
-
-    private String expandEscapingSymbol(char symbol) {
-        return switch (symbol) {
-            case 'r' -> "\r";
-            case 'n' -> "\n";
-            case 't' -> "\t";
-            case 'f' -> "\f";
-            case 'b' -> "\b";
-            case '"' -> "\"";
-            default -> "\\" + symbol;
-        };
     }
 }
